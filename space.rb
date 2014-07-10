@@ -73,7 +73,7 @@ class SpaceScene < Ray::Scene
 
 
     enemies.each do |enemy|
-      puts enemy.inspect
+      #puts enemy.inspect
 
       enemy.draw(window)
     end
@@ -84,28 +84,32 @@ end
 
 class Ship
 
-  attr_accessor :x
-  attr_reader :y
+  attr_reader :y, :x
 
   def colour
     Ray::Color.new(255, 255, 255)
   end
 
-  def initialize(window_dimensions)
-    @x = window_dimensions.to_a[0] / 2
-    @y = window_dimensions.to_a[1] - 20
+  def initialize(bounds)
+    @max_x = bounds.x
+    @x = bounds.x / 2
+    @y = bounds.y - 20
   end
 
   def speed
     10
   end
 
+  def x=(v)
+    @x = v % @max_x
+  end
+
   def left
-    @x -= speed
+    self.x -= speed
   end
 
   def right
-    @x += speed
+    self.x += speed
   end
 
   def last_shot_at
