@@ -49,15 +49,14 @@ class SpaceScene < Ray::Scene
       shots.delete(shot) if shot.y < 0
     end
 
-    shot_points = shots.collect { |shot| [shot.x, shot.y] }
-
     enemies.each do |enemy|
       enemy.update
-      shot_points.each do |sx, sy|
-        x = enemy.x - sx
-        y = enemy.y - sy
+      shots.each do |shot|
+        x = enemy.x - shot.x
+        y = enemy.y - shot.y
         if x.abs < 5 && y.abs < 5
           enemies.delete(enemy)
+          shots.delete(shot)
         end
       end
     end
