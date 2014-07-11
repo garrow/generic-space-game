@@ -177,16 +177,16 @@ class Enemy < GameObject
   end
 
   def update
-    @y = @y + 1
+    #@y = @y + 0.5
   end
 
   def render(window)
     colour = Ray::Color.new(0, 255, 0)
     width = 10
 
-    left_point = [x, y]
-    right_point = [x, y + 5]
-    drawable =  Ray::Polygon.line(left_point, right_point, width, colour)
+    points = [x, y, 10, 10]
+
+    drawable =  Ray::Polygon.rectangle(points, colour)
 
     window.draw  drawable
   end
