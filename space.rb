@@ -1,6 +1,7 @@
 require 'ray'
 require 'pry'
 
+
 class GameObject
   def update
   end
@@ -79,9 +80,22 @@ class SpaceScene < Ray::Scene
       Ship.get.shoot
     end
 
-    GameObject.descendants.each do |obj_class|
+    [Shot, Ship, Enemy, Explosion].each do |obj_class|
       obj_class.all.each &:update
     end
+
+    Shot.all.each do |shot|
+      Enemy.all.each do |enemy|
+        x = shot.x - enemy.x
+        y = shot.y - enemy.y
+        if x.abs < 10 && y.abs < 10
+          enemy.destroy
+          shot.destroy
+          Explosion.create(shot.x, shot.y)
+        end
+      end
+    end
+
   end
 
   def render(window)
@@ -89,7 +103,7 @@ class SpaceScene < Ray::Scene
 
     colour =  Ray::Color.new(255, 255, 255)
 
-    GameObject.descendants.each do |obj_class|
+    [Shot, Ship, Enemy, Explosion].each do |obj_class|
       obj_class.all.each do |obj_instance|
         obj_instance.render(window)
       end
@@ -177,7 +191,8 @@ class Enemy < GameObject
   end
 
   def update
-    #@y = @y + 0.5
+    @x = @x + [-5, 5].sample
+    @y = @y + 0.5
   end
 
   def render(window)
@@ -191,6 +206,37 @@ class Enemy < GameObject
     window.draw  drawable
   end
 end
+
+
+class Explosion < GameObject
+
+  attr_accessor :x, :y
+
+  def initialize(x,y)
+    @birth = Time.now
+    @x = x
+    @y = y
+  end
+
+  def update
+    destroy if (Time.now - @birth) > 0.5
+  end
+
+  def age
+    Time.now - @birth
+  end
+
+  def render(window)
+    colour_age = age * 2
+    colour = Ray::Color.white
+
+    size = age * 50
+    colour.alpha = 255 - (255 * colour_age)
+
+    window.draw Ray::Polygon.circle([x,y], size , colour)
+  end
+end
+
 
 game = Game.new
 
