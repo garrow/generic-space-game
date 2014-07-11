@@ -143,12 +143,7 @@ class Ship < GameObject
   end
 
   def render(window)
-    width = 10
-
-    left_point = [x, y]
-    right_point = [x, y + 5]
-
-    window.draw Ray::Polygon.line(left_point, right_point, width, colour)
+    window.draw Ray::Polygon.circle([x, y], 4, colour)
   end
 end
 
@@ -168,9 +163,7 @@ class Shot < GameObject
 
   def render(window)
     colour = Ray::Color.new(255, 0, 0)
-    bottom_point = [x , y - 5]
-    top_point = [x, y]
-    window.draw Ray::Polygon.line(bottom_point, top_point, 3, colour)
+    window.draw Ray::Polygon.circle([x,y], 2, colour)
   end
 end
 
