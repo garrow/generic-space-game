@@ -163,6 +163,7 @@ class Shot < GameObject
 
   def update
     @y -= speed
+    destroy if @y < 0
   end
 
   def render(window)
