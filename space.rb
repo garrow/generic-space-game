@@ -75,7 +75,6 @@ class SpaceScene < Ray::Scene
     if holding? key(:right)
       Ship.get.right
     end
-
     if holding? key(:space)
       Ship.get.shoot
     end
@@ -95,14 +94,10 @@ class SpaceScene < Ray::Scene
         end
       end
     end
-
   end
 
   def render(window)
-    window.clear Ray::Color.new(50, 50, 60)
-
-    colour =  Ray::Color.new(255, 255, 255)
-
+    #window.clear Ray::Color.new(50, 50, 60)
     [Shot, Ship, Enemy, Explosion].each do |obj_class|
       obj_class.all.each do |obj_instance|
         obj_instance.render(window)
@@ -157,7 +152,7 @@ class Ship < GameObject
   end
 
   def render(window)
-    window.draw Ray::Polygon.circle([x, y], 4, colour)
+    window.draw Ray::Polygon.circle([x, y], 15, colour)
   end
 end
 
