@@ -3,7 +3,7 @@ require 'pry'
 
 class Game < Ray::Game
   def initialize
-    super "SpaceInvaders"
+    super "Space"
 
     SpaceScene.bind(self)
 
@@ -20,7 +20,8 @@ class SpaceScene < Ray::Scene
   def setup
     @ship = Ship.new(window.size)
     @shots = []
-    @enemies = [Enemy.new(window.size)]
+    @enemy_formation = Formation.new(window.size, 100)
+    @enemies = @enemy_formation.ships
   end
 
   def register
@@ -49,12 +50,14 @@ class SpaceScene < Ray::Scene
       shots.delete(shot) if shot.y < 0
     end
 
+    @enemy_formation.update
+
     enemies.each do |enemy|
       enemy.update
       shots.each do |shot|
         x = enemy.x - shot.x
         y = enemy.y - shot.y
-        if x.abs < 5 && y.abs < 5
+        if x.abs < 10 && y.abs < 5
           enemies.delete(enemy)
           shots.delete(shot)
         end
@@ -63,6 +66,8 @@ class SpaceScene < Ray::Scene
   end
 
   def render(window)
+    window.clear Ray::Color.new(50, 50, 60)
+
     colour =  Ray::Color.new(255, 255, 255)
     shots.each do |shot|
       #puts shot.inspect
@@ -161,9 +166,9 @@ class Enemy
 
   attr_accessor :x, :y
 
-  def initialize(window_size)
-    @x = window_size.to_a[0] / 2
-    @y = window_size.to_a[1] / 2
+  def initialize(x,y)
+    @x = x
+    @y = y
   end
 
   def update
@@ -179,6 +184,65 @@ class Enemy
 
     window.draw  drawable
   end
+end
+
+class Formation
+  attr_reader :ships
+
+  def initialize(dimensions, size = 20)
+    @orders = []
+
+    x = dimensions.x
+    y = dimensions.y / 2
+
+    @ships = size.times.collect do
+      Enemy.new(any(x), any(y))
+    end
+
+    #@ships = [Enemy.new(dimensions)]
+  end
+
+
+  def any(v)
+    rand(0..v)
+  end
+
+  def aggressiveness
+    0.75
+  end
+
+  def moved_at
+    @moved_at ||= moved!
+  end
+
+  def moved!
+    @moved_at = Time.now
+  end
+
+  def time_to_move?
+   Time.now - moved_at > aggressiveness
+  end
+
+  def update
+    if time_to_move?
+      @ships.each do |ship|
+        ship.y += any(5)
+        ship.x += rand(-5..5)
+      end
+      moved!
+    end
+  end
+
+  def last_moved_at
+    @last_shot_at ||= Time.now
+  end
+
+  def gun_cooled?
+    Time.now - last_shot_at > 0.1
+  end
+
+
+
 end
 
 game = Game.new
