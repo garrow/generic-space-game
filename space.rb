@@ -1,7 +1,6 @@
 require 'ray'
 require 'pry'
 
-
 class GameObject
   def update
   end
@@ -54,9 +53,8 @@ class SpaceScene < Ray::Scene
 
   def setup
     Ship.create(window.size)
-
     10.times do
-      Enemy.create(rand(window.size.x), rand(window.size.y))
+      Enemy.create(rand(window.size.x), rand(window.size.y / 2))
     end
   end
 
