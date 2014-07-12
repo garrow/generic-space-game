@@ -67,6 +67,8 @@ class SpaceScene < Ray::Scene
   end
 
   def update
+    exit! if holding? key(:q)
+
     if holding? key(:left)
       Ship.get.left
     end
