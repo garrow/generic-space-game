@@ -25,14 +25,6 @@ class GameObject
       all << new(*args)
       all.last
     end
-
-    def descendants
-      @cache ||= begin
-        ObjectSpace.each_object(Class).select do |klass|
-          klass < self
-        end
-      end
-    end
   end
 end
 
@@ -43,15 +35,18 @@ class Game < Ray::Game
 
     SpaceScene.bind(self)
 
-    scenes << :cool
+    scenes << :space
   end
 end
 
 class SpaceScene < Ray::Scene
 
-  scene_name :cool
+  scene_name :space
+
+  attr_reader :object_types
 
   def setup
+    @object_types = [Shot, Ship, Enemy, Explosion, Bomb]
     Ship.create(window.size)
     10.times do
       Enemy.create(rand(window.size.x), rand(window.size.y / 2))
@@ -79,7 +74,7 @@ class SpaceScene < Ray::Scene
       Ship.get.shoot
     end
 
-    [Shot, Ship, Enemy, Explosion].each do |obj_class|
+    object_types.each do |obj_class|
       obj_class.all.each &:update
     end
 
@@ -97,9 +92,12 @@ class SpaceScene < Ray::Scene
   end
 
   def render(window)
-    #window.clear Ray::Color.new(50, 50, 60)
-    [Shot, Ship, Enemy, Explosion].each do |obj_class|
+    window.clear Ray::Color.new(50, 50, 60)
+    origin = 0
+    object_types.each do |obj_class|
       obj_class.all.each do |obj_instance|
+        window.draw(text "#{obj_class} #{obj_instance.x}:#{obj_instance.y} ", :at => [0, origin])
+        origin += 10
         obj_instance.render(window)
       end
     end
@@ -108,13 +106,14 @@ end
 
 class Ship < GameObject
 
-  attr_reader :y, :x
+  attr_reader :y, :x, :gun_timer
 
   def colour
     Ray::Color.new(255, 255, 255)
   end
 
   def initialize(bounds)
+    @gun_timer = CooldownTimer.new
     @max_x = bounds.x
     @x = bounds.x / 2
     @y = bounds.y - 20
@@ -136,23 +135,34 @@ class Ship < GameObject
     self.x += speed
   end
 
-  def last_shot_at
-    @last_shot_at ||= Time.now
-  end
-
-  def gun_cooled?
-    Time.now - last_shot_at > 0.1
-  end
-
   def shoot
-    return unless gun_cooled?
-
-    @last_shot_at = Time.now
-    Shot.create(x, y)
+    if gun_timer.ready?
+      gun_timer.trigger
+      Shot.create(x, y)
+    end
   end
 
   def render(window)
     window.draw Ray::Polygon.circle([x, y], 15, colour)
+  end
+end
+
+class CooldownTimer
+
+  attr_reader :last_trigger, :cooldown
+
+  def initialize(cooldown = 0.1)
+    @cooldown = cooldown
+    @last_trigger = Time.now
+  end
+
+  def ready?
+    Time.now - last_trigger > cooldown
+  end
+
+  def trigger
+    return unless ready?
+    @last_trigger = Time.now
   end
 end
 
@@ -171,22 +181,50 @@ class Shot < GameObject
   end
 
   def render(window)
-    colour = Ray::Color.new(255, 0, 0)
     window.draw Ray::Polygon.circle([x,y], 2, colour)
+  end
+
+  def colour
+    @colour ||= Ray::Color.new(255, 0, 0)
+  end
+end
+
+class Bomb < Shot
+
+  def initialize(x,y, speed = 2)
+    super(x,y,speed)
+  end
+
+  def update
+    @y += speed
+    destroy if @y > 400
+  end
+
+  def colour
+    @colour ||= Ray::Color.new(255, 255, 0)
   end
 end
 
 class Enemy < GameObject
 
-  attr_accessor :x, :y
+  attr_accessor :x, :y, :gun_timer
 
   def initialize(x,y)
+    @gun_timer = CooldownTimer.new(2)
     @x = x
     @y = y
   end
 
+  def shoot
+    if gun_timer.ready?
+      gun_timer.trigger
+      Bomb.create(x, y)
+    end
+  end
+
   def update
-    @x = @x + [-5, 5].sample
+    shoot
+    @x = @x + [-2, 2].sample
     @y = @y + 0.5
   end
 
@@ -231,7 +269,6 @@ class Explosion < GameObject
     window.draw Ray::Polygon.circle([x,y], size , colour)
   end
 end
-
 
 game = Game.new
 
