@@ -50,15 +50,28 @@ module Space
             end
           end
         end
+
+        ship = Ship.get
+        Bomb.all.each do |bomb|
+          x = bomb.x - ship.x
+          y = bomb.y - ship.y
+          if x.abs < 15 && y.abs < 15
+            puts "game over"
+
+            Explosion.create(bomb.x, bomb.y)
+            #   bomb.destroy
+            #   ship.destroy
+
+          end
+        end
       end
 
       def render(window)
-        window.clear Ray::Color.new(50, 50, 60)
-        origin = 0
+        @clear_colour ||= Ray::Color.new(50, 50, 60)
+        window.clear @clear_colour
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
-            window.draw(text "#{obj_class} #{obj_instance.x}:#{obj_instance.y} ", :at => [0, origin])
-            origin += 10
+            puts "#{obj_class} #{obj_instance.x}:#{obj_instance.y} "
             obj_instance.render(window)
           end
         end

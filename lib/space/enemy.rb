@@ -24,14 +24,30 @@ module Space
     end
 
     def render(window)
-      colour = Ray::Color.new(0, 255, 0)
-      width  = 10
 
-      points = [x, y, 10, 10]
+      @sprite ||= begin
+        image = Ray::Image.new [10, 10]
+        Ray::ImageTarget.new(image) do |target|
+          target.draw Ray::Polygon.rectangle([0,0,10,10], Ray::Color.new(255, 0, 0))
+          target.update
+        end
+        Ray::Sprite.new image
+      end
 
-      drawable = Ray::Polygon.rectangle(points, colour)
+      @sprite.x = @x
+      @sprite.y = @y
 
-      window.draw drawable
+
+      window.draw @sprite
+
+      # colour = Ray::Color.new(0, 255, 0)
+      # width  = 10
+      #
+      # points = [x, y, 10, 10]
+      #
+      # drawable = Ray::Polygon.rectangle(points, colour)
+      #
+      # window.draw drawable
     end
   end
 end
