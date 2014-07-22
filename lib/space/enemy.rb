@@ -24,7 +24,6 @@ module Space
     end
 
     def render(window)
-
       @sprite ||= begin
         image = Ray::Image.new [10, 10]
         Ray::ImageTarget.new(image) do |target|
@@ -37,17 +36,7 @@ module Space
       @sprite.x = @x
       @sprite.y = @y
 
-
       window.draw @sprite
-
-      # colour = Ray::Color.new(0, 255, 0)
-      # width  = 10
-      #
-      # points = [x, y, 10, 10]
-      #
-      # drawable = Ray::Polygon.rectangle(points, colour)
-      #
-      # window.draw drawable
     end
   end
 end
