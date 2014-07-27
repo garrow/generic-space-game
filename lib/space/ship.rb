@@ -4,10 +4,13 @@ module Space
 
     attr_reader :y, :x, :gun_timer
 
+    SIZE = 30
+    CENTER = SIZE / 2
+
     IMAGE = begin
-      image = Ray::Image.new [30, 30]
+      image = Ray::Image.new [SIZE, SIZE]
       Ray::ImageTarget.new(image) do |target|
-        target.draw Ray::Polygon.circle([15, 15], 15, Ray::Color.new(255, 255, 255))
+        target.draw Ray::Polygon.circle([CENTER, CENTER], CENTER, Ray::Color.new(255, 255, 255))
         target.update
       end
       image
@@ -50,8 +53,8 @@ module Space
     end
 
     def update
-      @sprite.x = @x
-      @sprite.y = @y
+      @sprite.x = @x - CENTER
+      @sprite.y = @y - CENTER
     end
 
     def render(window)
