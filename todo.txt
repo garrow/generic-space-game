@@ -1,0 +1,4 @@
+- Detect Player Death
+- Add score
+- spawn new enemies
+
