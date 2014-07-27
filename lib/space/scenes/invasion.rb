@@ -8,9 +8,11 @@ module Space
 
       def setup
         @object_types = [Shot, Ship, Enemy, Explosion, Bomb]
+        @score = 0
+
         Ship.create(window.size)
         10.times do
-          Enemy.create(rand(window.size.x), rand(window.size.y / 2))
+          Enemy.create(rand(window.size.x), rand(window.size.y / 4))
         end
       end
 
@@ -46,6 +48,7 @@ module Space
             if x.abs < 10 && y.abs < 10
               enemy.destroy
               shot.destroy
+              @score += 1
               Explosion.create(shot.x, shot.y)
             end
           end
@@ -56,9 +59,9 @@ module Space
           x = bomb.x - ship.x
           y = bomb.y - ship.y
           if x.abs < 15 && y.abs < 15
-            puts "game over"
+            game_over(bomb)
 
-            Explosion.create(bomb.x, bomb.y)
+
             #   bomb.destroy
             #   ship.destroy
 
@@ -66,13 +69,26 @@ module Space
         end
       end
 
-      def render(window)
+      def clean_up
+        object_types.each do |ot|
+          ot.all.map &:destroy
+        end
+      end
+
+      def game_over(bomb)
+
+        Explosion.create(bomb.x, bomb.y)
+        pop_scene
+        clean_up
+      end
+
+      def render(win)
         @clear_colour ||= Ray::Color.new(50, 50, 60)
-        window.clear @clear_colour
+        win.clear @clear_colour
+        win.draw text "#{@score}", at: [5,5]
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
-            puts "#{obj_class} #{obj_instance.x}:#{obj_instance.y} "
-            obj_instance.render(window)
+            obj_instance.render(win)
           end
         end
       end

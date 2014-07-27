@@ -5,7 +5,7 @@ module Space
 
     def initialize(cooldown = 0.1)
       @cooldown     = cooldown
-      @last_trigger = Time.now
+      @last_trigger = Time.now - @cooldown
     end
 
     def ready?

@@ -9,6 +9,7 @@ require_relative './bomb'
 
 
 require_relative './scenes/invasion'
+require_relative './scenes/title'
 
 module Space
   class Game < Ray::Game
@@ -16,8 +17,9 @@ module Space
       super "Space"
 
       Scenes::Invasion.bind(self)
+      Scenes::Title.bind(self)
 
-      scenes << :invasion
+      scenes << :title
     end
   end
 end
