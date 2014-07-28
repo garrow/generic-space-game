@@ -11,6 +11,8 @@ module Space
         @score = 0
         @starfield = Starfield.new(window.size)
 
+        @lives = 3
+
         Ship.create(window.size)
         10.times do
           Enemy.create(rand(window.size.x), rand(window.size.y / 4))
@@ -64,12 +66,14 @@ module Space
           x = bomb.x - ship.x
           y = bomb.y - ship.y
           if x.abs < 15 && y.abs < 15
-            game_over(bomb)
+            @lives =  @lives - 1
 
+            Explosion.create(bomb.x, bomb.y)
+            bomb.destroy
 
-            #   bomb.destroy
-            #   ship.destroy
-
+            if @lives < 1
+              exit
+            end
           end
         end
       end
@@ -80,15 +84,10 @@ module Space
         end
       end
 
-      def game_over(bomb)
-
-        Explosion.create(bomb.x, bomb.y)
-        exit
-      end
-
       def render(win)
         @starfield.draw(win)
         win.draw text "Score: #{@score}", at: [10,10]
+        win.draw text "Lives: #{@lives}", at: [10,30]
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
             obj_instance.render(win)
