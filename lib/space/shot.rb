@@ -1,14 +1,11 @@
 module Space
   class Shot < GameObject
 
-    IMAGE = begin
-          image = Ray::Image.new [4, 4]
-          Ray::ImageTarget.new(image) do |target|
-            target.draw Ray::Polygon.circle([2,2], 2, Ray::Color.new(255, 0, 0))
-            target.update
-          end
-          image
-        end
+    def self.tilesheet_path
+      File.join(File.dirname(__FILE__), '../../assets/space-shooter-redux/sheet.png')
+    end
+
+    IMAGE = Ray::Image.new tilesheet_path
 
     attr_accessor :x, :y, :speed
 
@@ -16,6 +13,9 @@ module Space
       @x     = x
       @y     = y
       @speed = speed
+      @sprite = Ray::Sprite.new(IMAGE, zoom: [0.5, 0.25])
+      # <SubTexture name="laserBlue01.png" x="856" y="421" width="9" height="54"/>
+      @sprite.sub_rect = [856, 421, 9, 54]
     end
 
     def update
@@ -24,11 +24,8 @@ module Space
     end
 
     def render(window)
-      @sprite ||= Ray::Sprite.new(IMAGE)
-
       @sprite.x = @x
       @sprite.y = @y
-
       window.draw @sprite
     end
   end

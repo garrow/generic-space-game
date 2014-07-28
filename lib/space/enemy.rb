@@ -9,7 +9,7 @@ module Space
 
 # <SubTexture name="playerLife3_red.png" x="777" y="443" width="32" height="26"/>
     def initialize(x, y)
-      @gun_timer = CooldownTimer.new(30000)
+      @gun_timer = CooldownTimer.new(rand(2..4))
       @x         = x
       @y         = y
 
