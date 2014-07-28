@@ -4,6 +4,9 @@ module Space
 
       scene_name :title
 
+      attr_writer :message_text
+      attr_reader :starfield
+
       def setup
         @starfield = Starfield.new(window.size)
       end
@@ -14,15 +17,26 @@ module Space
         on(:key_press, key(:space)) { push_scene(:invasion) }
 
         always do
-          @starfield.update
+          starfield.update
         end
       end
 
-     def render(window)
-        @starfield.draw(window)
-        window.draw text "Press Space to Start", at: window.view.center
+      def message_text
+        @message_text ||= begin
+          text("Press Space to Start").tap do |t|
+            # Center the text on screen.
+            coords = window.view.center - (t.rect.size / 2)
+            t.x = coords.x
+            t.y = coords.y
+          end
+        end
+      end
+
+      def render(window)
+        starfield.draw(window)
+
+        window.draw message_text
       end
     end
   end
 end
-
