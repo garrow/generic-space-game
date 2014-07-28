@@ -6,6 +6,7 @@ require_relative './enemy'
 require_relative './explosion'
 require_relative './shot'
 require_relative './bomb'
+require_relative './starfield'
 
 
 require_relative './scenes/invasion'

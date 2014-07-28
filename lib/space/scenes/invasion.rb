@@ -9,6 +9,7 @@ module Space
       def setup
         @object_types = [Shot, Ship, Enemy, Explosion, Bomb]
         @score = 0
+        @starfield = Starfield.new(window.size)
 
         Ship.create(window.size)
         10.times do
@@ -36,6 +37,8 @@ module Space
         if holding? key(:space)
           Ship.get.shoot
         end
+
+        @starfield.update
 
         object_types.each do |obj_class|
           obj_class.all.each &:update
@@ -78,13 +81,13 @@ module Space
       def game_over(bomb)
 
         Explosion.create(bomb.x, bomb.y)
-        pop_scene
-        clean_up
+        exit
       end
 
       def render(win)
-        @clear_colour ||= Ray::Color.new(50, 50, 60)
-        win.clear @clear_colour
+        # @clear_colour ||= Ray::Color.new(50, 50, 60)
+        # win.clear @clear_colour
+        @starfield.draw(win)
         win.draw text "#{@score}", at: [5,5]
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
