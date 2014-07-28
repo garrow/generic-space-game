@@ -5,7 +5,7 @@ module Space
     attr_accessor :x, :y, :gun_timer
 
     def initialize(x, y)
-      @gun_timer = CooldownTimer.new(2)
+      @gun_timer = CooldownTimer.new(3)
       @x         = x
       @y         = y
     end
