@@ -85,10 +85,8 @@ module Space
       end
 
       def render(win)
-        # @clear_colour ||= Ray::Color.new(50, 50, 60)
-        # win.clear @clear_colour
         @starfield.draw(win)
-        win.draw text "#{@score}", at: [5,5]
+        win.draw text "Score: #{@score}", at: [10,10]
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
             obj_instance.render(win)
