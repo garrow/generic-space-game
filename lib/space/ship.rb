@@ -24,7 +24,9 @@ module Space
       @y         = bounds.y - 20
       @sprite    = Ray::Sprite.new IMAGE
       # <SubTexture name="playerLife1_blue.png" x="482" y="358" width="33" height="26"/>
-      @sprite.sub_rect = [482, 358, 33, 26]
+      @sprite.sub_rect = [482, 358, 32, 26]
+      @size = @sprite.rect.size
+      # binding.pry
     end
 
     def speed
@@ -52,8 +54,14 @@ module Space
     end
 
     def update
-      @sprite.x = @x - CENTER
-      @sprite.y = @y - CENTER
+      offset = @size / 2
+
+
+      @sprite.x = @x - offset.x
+      @sprite.y = @y - offset.y
+
+      # @sprite.x = @x - CENTER
+      # @sprite.y = @y - CENTER
     end
 
     def render(window)

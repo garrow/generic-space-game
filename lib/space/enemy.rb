@@ -1,13 +1,23 @@
 module Space
   class Enemy < GameObject
 
-
+    def tilesheet_path
+      File.join(File.dirname(__FILE__), '../../assets/space-shooter-redux/sheet.png')
+    end
     attr_accessor :x, :y, :gun_timer
+    attr_reader :size
 
+# <SubTexture name="playerLife3_red.png" x="777" y="443" width="32" height="26"/>
     def initialize(x, y)
-      @gun_timer = CooldownTimer.new(3)
+      @gun_timer = CooldownTimer.new(30000)
       @x         = x
       @y         = y
+
+      @sprite = begin
+        Ray::Sprite.new Ray::Image.new tilesheet_path
+      end
+      @sprite.sub_rect = [777, 443, 32, 26]
+      @size = @sprite.rect.size
     end
 
     def shoot
@@ -24,17 +34,11 @@ module Space
     end
 
     def render(window)
-      @sprite ||= begin
-        image = Ray::Image.new [10, 10]
-        Ray::ImageTarget.new(image) do |target|
-          target.draw Ray::Polygon.rectangle([0,0,10,10], Ray::Color.new(255, 0, 0))
-          target.update
-        end
-        Ray::Sprite.new image
-      end
 
-      @sprite.x = @x
-      @sprite.y = @y
+      offset = @size / 2
+
+      @sprite.x = @x - offset.x
+      @sprite.y = @y - offset.y
 
       window.draw @sprite
     end

@@ -48,7 +48,9 @@ module Space
           Enemy.all.each do |enemy|
             x = shot.x - enemy.x
             y = shot.y - enemy.y
-            if x.abs < 10 && y.abs < 10
+            bounding = enemy.size / 2
+            if x.abs < bounding.x && y.abs < bounding.y
+              # binding.pry
               enemy.destroy
               shot.destroy
               @score += 1
