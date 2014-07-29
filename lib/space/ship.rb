@@ -1,17 +1,7 @@
 module Space
   class Ship < GameObject
-    def self.tilesheet_path
-      File.join(File.dirname(__FILE__), '../../assets/space-shooter-redux/sheet.png')
-    end
 
     attr_reader :y, :x, :gun_timer
-
-    SIZE = 30
-    CENTER = SIZE / 2
-
-    IMAGE = begin
-      Ray::Image.new tilesheet_path
-    end
 
     def colour
       Ray::Color.new(255, 255, 255)
@@ -22,10 +12,7 @@ module Space
       @max_x     = bounds.x
       @x         = bounds.x / 2
       @y         = bounds.y - 20
-      @sprite    = Ray::Sprite.new IMAGE
-      # <SubTexture name="playerLife1_blue.png" x="482" y="358" width="33" height="26"/>
-      @sprite.sub_rect = [482, 358, 33, 26]
-      @size = @sprite.rect.size
+      @sprite    = SpriteLoader.build.sprite('playerLife1_blue.png')
     end
 
     def speed
@@ -52,7 +39,7 @@ module Space
     end
 
     def update
-      offset = @size / 2
+      offset = @sprite.rect.size / 2
 
       @sprite.x = @x - offset.x
       @sprite.y = @y - offset.y

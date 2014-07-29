@@ -4,7 +4,6 @@ module Space
 
       scene_name :title
 
-
       FONT_PATH = File.join(File.dirname(__FILE__), '../../../assets/kenvector_future_thin.ttf')
 
       attr_writer :message_text

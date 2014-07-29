@@ -8,6 +8,8 @@ require_relative './shot'
 require_relative './bomb'
 require_relative './starfield'
 
+require_relative './sprite_loader'
+
 
 require_relative './scenes/invasion'
 require_relative './scenes/title'
