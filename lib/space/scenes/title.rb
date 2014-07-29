@@ -4,6 +4,9 @@ module Space
 
       scene_name :title
 
+
+      FONT_PATH = File.join(File.dirname(__FILE__), '../../../assets/kenvector_future_thin.ttf')
+
       attr_writer :message_text
       attr_reader :starfield
 
@@ -23,7 +26,7 @@ module Space
 
       def message_text
         @message_text ||= begin
-          text("Press Space to Start").tap do |t|
+          text("Press Space to Start", font: FONT_PATH, size: 20).tap do |t|
             # Center the text on screen.
             coords = window.view.center - (t.rect.size / 2)
             t.x = coords.x
