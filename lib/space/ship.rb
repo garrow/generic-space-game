@@ -3,10 +3,6 @@ module Space
 
     attr_reader :y, :x, :gun_timer
 
-    def colour
-      Ray::Color.new(255, 255, 255)
-    end
-
     def initialize(bounds)
       @gun_timer = CooldownTimer.new(0.3)
       @max_x     = bounds.x

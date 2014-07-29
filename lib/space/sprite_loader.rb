@@ -25,12 +25,15 @@ module Space
 
   class SpriteLoader
 
+    # Lazy, shitty singletonish.
     def self.build
-      p = File.join(File.dirname(__FILE__), '../../assets/space-shooter-redux/')
+      @instance ||= begin
+        p = File.join(File.dirname(__FILE__), '../../assets/space-shooter-redux/')
 
-      sheet_path = File.join(p, 'sheet.png')
-      atlas_path = File.join(p, 'sheet.xml')
-      new(sheet_path, atlas_path)
+        sheet_path = File.join(p, 'sheet.png')
+        atlas_path = File.join(p, 'sheet.xml')
+        new(sheet_path, atlas_path)
+      end
     end
 
     attr_reader :sheet_path, :atlas_path
