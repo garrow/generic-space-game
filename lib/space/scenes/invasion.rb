@@ -4,6 +4,8 @@ module Space
 
       scene_name :invasion
 
+      FONT_PATH = File.join(File.dirname(__FILE__), '../../../assets/kenvector_future_thin.ttf')
+
       attr_reader :object_types
 
       def setup
@@ -86,8 +88,8 @@ module Space
 
       def render(win)
         @starfield.draw(win)
-        win.draw text "Score: #{@score}", at: [10,10]
-        win.draw text "Lives: #{@lives}", at: [10,30]
+        win.draw text "Score: #{@score}", at: [10,10], font: FONT_PATH, size: 20
+        win.draw text "Lives: #{@lives}", at: [10,30], font: FONT_PATH, size: 20
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
             obj_instance.render(win)
