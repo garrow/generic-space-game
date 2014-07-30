@@ -33,9 +33,9 @@ module Space
       end
 
       WHITE = star(Ray::Color.new(255, 255, 255))
-      RED   = star(Ray::Color.new(255, 240, 240))
-      BLUE  = star(Ray::Color.new(240, 240, 255))
-      GREEN = star(Ray::Color.new(240, 255, 240))
+      RED   = star(Ray::Color.new(255, 200, 200))
+      BLUE  = star(Ray::Color.new(200, 200, 255))
+      GREEN = star(Ray::Color.new(200, 255, 200))
       STAR_COLOURS = [WHITE, RED, BLUE, GREEN]
 
       attr_accessor :bounds
