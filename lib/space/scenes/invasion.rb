@@ -86,14 +86,27 @@ module Space
         end
       end
 
+      private def default_text(string, opts = {})
+        text(string, opts.merge!(font: FONT_PATH, size: 20))
+      end
+
       def render(win)
         @starfield.draw(win)
-        win.draw text "Score: #{@score}", at: [10,10], font: FONT_PATH, size: 20
-        win.draw text "Lives: #{@lives}", at: [10,30], font: FONT_PATH, size: 20
+
         object_types.each do |obj_class|
           obj_class.all.each do |obj_instance|
             obj_instance.render(win)
           end
+        end
+
+        if @game_over
+          game_over_text = default_text("Game Over\n  Score: #{@score}").tap do |t|
+            t.center_on(win.view.center)
+          end
+          win.draw game_over_text
+        else
+          win.draw default_text "Score: #{@score}", at: [10,10]
+          win.draw default_text "Lives: #{@lives}", at: [10,win.view.size.y - 30]
         end
       end
     end

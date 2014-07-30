@@ -16,7 +16,7 @@ module Space
       def register
         add_hook :quit, method(:exit!)
         on(:key_press, key(:q)) { exit! }
-        on(:key_press, key(:space)) { push_scene(:invasion) }
+        on(:key_press, key(:return)) { push_scene(:invasion) }
 
         always do
           starfield.update
@@ -25,11 +25,8 @@ module Space
 
       def message_text
         @message_text ||= begin
-          text("Press Space to Start", font: FONT_PATH, size: 20).tap do |t|
-            # Center the text on screen.
-            coords = window.view.center - (t.rect.size / 2)
-            t.x = coords.x
-            t.y = coords.y
+          text("Press Enter to Start", font: FONT_PATH, size: 20).tap do |t|
+            t.center_on(window.view.center)
           end
         end
       end
