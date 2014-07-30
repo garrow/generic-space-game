@@ -5,7 +5,7 @@ module Space
     IMAGE = begin
           image = Ray::Image.new [4, 4]
           Ray::ImageTarget.new(image) do |target|
-            target.draw Ray::Polygon.circle([2,2], 2, Ray::Color.new(255, 255, 0))
+            target.draw Ray::Polygon.circle([2,2], 2, Ray::Color.new(255, 0, 0))
             target.update
           end
           image
