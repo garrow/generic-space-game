@@ -121,10 +121,7 @@ module Space
         end
 
         if @game_over
-          game_over_text = default_text("Game Over\n  Score: #{@score}").tap do |t|
-            t.center_on(win.view.center)
-          end
-          win.draw game_over_text
+          win.draw default_text("Game Over\n  Score: #{@score}").center_on(win.view.center)
         else
           win.draw default_text "Score: #{@score}", at: [10,10]
           win.draw default_text "Lives: #{@lives}", at: [10,win.view.size.y - 30]

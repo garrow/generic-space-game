@@ -25,9 +25,7 @@ module Space
 
       def message_text
         @message_text ||= begin
-          text("Press Enter to Start", font: FONT_PATH, size: 20).tap do |t|
-            t.center_on(window.view.center)
-          end
+          text("Press Enter to Start", font: FONT_PATH, size: 20).center_on(window.view.center)
         end
       end
 
