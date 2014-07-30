@@ -10,14 +10,21 @@ module Space
 
       def setup
         @object_types = [Shot, Ship, Enemy, Explosion, Bomb]
-        @score = 0
+
         @starfield = Starfield.new(window.size)
 
+        start_game
+      end
+
+      def start_game
+        @score = 0
         @lives = 3
+        @game_over = false
 
         Ship.create(window.size)
+
         10.times do
-          Enemy.create(rand(window.size.x), rand(window.size.y / 4))
+          Enemy.create(rand(window.size.x), rand(window.size.y / 4), window.size)
         end
       end
 
@@ -32,6 +39,12 @@ module Space
       def update
         exit! if holding? key(:q)
 
+        if @game_over && holding?(:return)
+          start_game
+        end
+
+        return if @game_over
+
         if holding? key(:left)
           Ship.get.left
         end
@@ -44,6 +57,10 @@ module Space
 
         @starfield.update
 
+        if Enemy.all.size < 1
+          game_over!
+        end
+
         object_types.each do |obj_class|
           obj_class.all.each &:update
         end
@@ -54,7 +71,6 @@ module Space
             y = shot.y - enemy.y
             bounding = enemy.size / 2
             if x.abs < bounding.x && y.abs < bounding.y
-              # binding.pry
               enemy.destroy
               shot.destroy
               @score += 1
@@ -74,10 +90,15 @@ module Space
             bomb.destroy
 
             if @lives < 1
-              exit
+              game_over!
             end
           end
         end
+      end
+
+      def game_over!
+        @game_over = true
+        clean_up
       end
 
       def clean_up
